@@ -84,16 +84,39 @@ class Node:
 class NodeManager:
     def __init__(self):
         self.nodes = {}
+        logProducer = KafkaProducer(bootstrap_servers=BOOTSTRAP_SERVER, value_serializer=lambda v: json.dumps(v).encode('utf-8'))
     
     def create_node(self):
         Vm_details = kafka_rpc("VmManager", {"method": "allocate_vm"})
-        print(Vm_details)
         if(Vm_details['status'] == 'success'):
+            log_message = {
+                "level": 0,
+                "service_name": "NodeManager",
+                "msg": "VM allocated -" + str(Vm_details['id'])
+            }
+            logProducer.send('logs', value=log_message)
             node = Node(len(self.nodes) + 1, Vm_details['ip'], Vm_details['username'], Vm_details['password'], Vm_details['id'])
             node.activate_node()
+            log_message = {
+                "level": 0,
+                "service_name": "NodeManager",
+                "msg": "Node activated -" + str(node.node_id)
+            }
+            logProducer.send('logs', value=log_message)
             self.nodes[node.node_id] = node
+            log_message = {
+                "level": 0,
+                "service_name": "NodeManager",
+                "msg": "Node added to nodes -" + str(node.node_id)
+            }
             return {'status': 'success', "msg": "created a node", "node_id": node.node_id}
         else:
+            log_message = {
+                "level": 3,
+                "service_name": "NodeManager",
+                "msg": "VM not allocated"
+            }
+            logProducer.send('logs', value=log_message)
             return {'status': 'failure', "error": "No VMs available"}
             
     def remove_node(self, node_id):
@@ -101,27 +124,89 @@ class NodeManager:
         vm_remove_result = self.nodes[node_id].deactivate_node()
         if(vm_remove_result['status'] == 'success'):
             del self.nodes[node_id]
+            log_message = {
+                "level": 0,
+                "service_name": "NodeManager",
+                "msg": "Node removed -" + str(node_id)
+            }
+            logProducer.send('logs', value=log_message)
             return {'status': 'success', "msg": "Node removed"}
         else:
+            log_message = {
+                "level": 3,
+                "service_name": "NodeManager",
+                "msg": "Node not removed"
+            }
+            logProducer.send('logs', value=log_message)
             return {'status': 'failure', "error": "Node not removed"}
     
     def reset_node(self, node_id):
         node_id = int(node_id)
-        return self.nodes[node_id].reset_node()
+        response = self.nodes[node_id].reset_node()
+        if(response['status'] == 'success'):
+            log_message = {
+                "level": 0,
+                "service_name": "NodeManager",
+                "msg": "Node reset -" + str(node_id)
+            }
+            logProducer.send('logs', value=log_message)
+            return {'status': 'success', "msg": "Node reset"}
+        else:
+            log_message = {
+                "level": 3,
+                "service_name": "NodeManager",
+                "msg": "Node not reset"
+            }
+            logProducer.send('logs', value=log_message)
+            return {'status': 'failure', "error": "Node not reset"}
     
     def get_health(self, node_id):   ## ask agent of the corresponding nodes 
         node_id = int(node_id)
-        return self.nodes[node_id].get_health()
+        response =  self.nodes[node_id].get_health()
+        if(response['status'] == 'success'):
+            log_message = {
+                "level": 0,
+                "service_name": "NodeManager",
+                "msg": "Node health -" + str(node_id)
+            }
+            logProducer.send('logs', value=log_message)
+            return {'status': 'success', "msg": "Node health", "health": response['health']}
+        else:
+            log_message = {
+                "level": 3,
+                "service_name": "NodeManager",
+                "msg": "Node health not available"
+            }
+            logProducer.send('logs', value=log_message)
+            return {'status': 'failure', "error": "Node health not available"}
         
     def run_process_on_node(self, node_id, process_config):
         node_id = int(node_id)
         if(node_id not in self.nodes):
+            log_message = {
+                "level": 3,
+                "service_name": "NodeManager",
+                "msg": "Node not found -" + str(node_id)
+            }
+            logProducer.send('logs', value=log_message)
             return {"status": 'failure', "error": "Node not found", "nodeid": node_id}
         
         sucess = self.nodes[node_id].run_process(process_config)
         if(sucess):
+            log_message = {
+                "level": 0,
+                "service_name": "NodeManager",
+                "msg": "Process started -" + str(node_id)
+            }
+            logProducer.send('logs', value=log_message)
             return {'status': 'success', "msg": "Process started", "nodeid": node_id, "process_config": process_config}
         else:
+            log_message = {
+                "level": 3,
+                "service_name": "NodeManager",
+                "msg": "Process failed to start -" + str(node_id)
+            }
+            logProducer.send('logs', value=log_message)
             return {'status': 'failure', "error": "Process failed to start", "nodeid": node_id, "process_config": process_config}
     
     
@@ -129,20 +214,29 @@ class NodeManager:
 if __name__ == "__main__":
     BOOTSTRAP_SERVER = sys.argv[-1]
     # create a producer, log that node_manager has started.
+    logProducer = KafkaProducer(bootstrap_servers=BOOTSTRAP_SERVER, value_serializer=lambda v: json.dumps(v).encode('utf-8'))
+
+    log_message = {
+        "level": 1,
+        "service_name": "NodeManager",
+        "msg": "NodeManager started"
+    }
+    logProducer.send('logs', value=log_message)
     producer = KafkaProducer(bootstrap_servers=BOOTSTRAP_SERVER)
-    log = { 'Process': 'node_manager', 'message': 'I have been run' }
-    producer.send("logs", json.dumps(log).encode('utf-8'))
 
     # Start node_manager server
     node_manager = NodeManager()
     consumer = KafkaConsumer('NodeManagerIn', bootstrap_servers=BOOTSTRAP_SERVER)
-    print("Starting Node Manager Server")
 
     for msg in consumer:
         # Take input
         request = json.loads(msg.value.decode('utf-8'))
-        log = { 'Process': 'node_manager', 'message': 'I have received a message', 'text': request}
-        producer.send("logs", json.dumps(log).encode('utf-8'))
+        log_message = {
+            "level": 0,
+            "service_name": "NodeManager",
+            "msg": "Received request -" + request['method']
+        }
+        logProducer.send('logs', value=log_message)
         
         # Process RPC request
         if(request['method'] == 'create_node'):
@@ -162,7 +256,12 @@ if __name__ == "__main__":
         
         # Send output
         response = {"request": request, "result": result}
-        producer.send("logs", json.dumps(response).encode('utf-8'))
+        log_message = {
+            "level": 1,
+            "service_name": "NodeManager",
+            "msg": "Sending response -" + request['method']
+        }
+        logProducer.send('logs', value=log_message)
         producer.send("NodeManagerOut", json.dumps(response).encode('utf-8'))
 
    

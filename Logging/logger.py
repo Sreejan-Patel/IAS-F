@@ -4,7 +4,7 @@ from kafka import KafkaConsumer
 import json
 
 # MongoDB Atlas URL
-MONGO_KEY = "mongodb+srv://Sreejan:IAS1234IAS@cluster0.q1cmmsz.mongodb.net/LoggerDB?retryWrites=true&w=majority"
+MONGO_KEY = "mongodb+srv://se33:se33@se3.mrwhfdo.mongodb.net/LoggerDB?retryWrites=true&w=majority&appName=Se3"
 
 def connect_to_mongodb():
     connected = False

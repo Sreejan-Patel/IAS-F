@@ -27,7 +27,7 @@ requests = [
     {
         'method': 'run_process_on_node',
         'args': {
-            'node_id': '1',
+            'node_id': '0',
             'config': {
                 'name': 'install',
                 'path': '../agent',
