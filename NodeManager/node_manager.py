@@ -84,7 +84,7 @@ class Node:
 class NodeManager:
     def __init__(self):
         self.nodes = {}
-        logProducer = KafkaProducer(bootstrap_servers=BOOTSTRAP_SERVER, value_serializer=lambda v: json.dumps(v).encode('utf-8'))
+        self.logProducer = KafkaProducer(bootstrap_servers=BOOTSTRAP_SERVER, value_serializer=lambda v: json.dumps(v).encode('utf-8'))
     
     def create_node(self):
         Vm_details = kafka_rpc("VmManager", {"method": "allocate_vm"})
@@ -94,7 +94,7 @@ class NodeManager:
                 "service_name": "NodeManager",
                 "msg": "VM allocated -" + str(Vm_details['id'])
             }
-            logProducer.send('logs', value=log_message)
+            self.logProducer.send('logs', value=log_message)
             node = Node(len(self.nodes) + 1, Vm_details['ip'], Vm_details['username'], Vm_details['password'], Vm_details['id'])
             node.activate_node()
             log_message = {
@@ -102,7 +102,7 @@ class NodeManager:
                 "service_name": "NodeManager",
                 "msg": "Node activated -" + str(node.node_id)
             }
-            logProducer.send('logs', value=log_message)
+            self.logProducer.send('logs', value=log_message)
             self.nodes[node.node_id] = node
             log_message = {
                 "level": 0,
@@ -116,7 +116,7 @@ class NodeManager:
                 "service_name": "NodeManager",
                 "msg": "VM not allocated"
             }
-            logProducer.send('logs', value=log_message)
+            self.logProducer.send('logs', value=log_message)
             return {'status': 'failure', "error": "No VMs available"}
             
     def remove_node(self, node_id):
@@ -129,7 +129,7 @@ class NodeManager:
                 "service_name": "NodeManager",
                 "msg": "Node removed -" + str(node_id)
             }
-            logProducer.send('logs', value=log_message)
+            self.logProducer.send('logs', value=log_message)
             return {'status': 'success', "msg": "Node removed"}
         else:
             log_message = {
@@ -137,7 +137,7 @@ class NodeManager:
                 "service_name": "NodeManager",
                 "msg": "Node not removed"
             }
-            logProducer.send('logs', value=log_message)
+            self.logProducer.send('logs', value=log_message)
             return {'status': 'failure', "error": "Node not removed"}
     
     def reset_node(self, node_id):
@@ -149,7 +149,7 @@ class NodeManager:
                 "service_name": "NodeManager",
                 "msg": "Node reset -" + str(node_id)
             }
-            logProducer.send('logs', value=log_message)
+            self.logProducer.send('logs', value=log_message)
             return {'status': 'success', "msg": "Node reset"}
         else:
             log_message = {
@@ -157,7 +157,7 @@ class NodeManager:
                 "service_name": "NodeManager",
                 "msg": "Node not reset"
             }
-            logProducer.send('logs', value=log_message)
+            self.logProducer.send('logs', value=log_message)
             return {'status': 'failure', "error": "Node not reset"}
     
     def get_health(self, node_id):   ## ask agent of the corresponding nodes 
@@ -169,7 +169,7 @@ class NodeManager:
                 "service_name": "NodeManager",
                 "msg": "Node health -" + str(node_id)
             }
-            logProducer.send('logs', value=log_message)
+            self.logProducer.send('logs', value=log_message)
             return {'status': 'success', "msg": "Node health", "health": response['health']}
         else:
             log_message = {
@@ -177,7 +177,7 @@ class NodeManager:
                 "service_name": "NodeManager",
                 "msg": "Node health not available"
             }
-            logProducer.send('logs', value=log_message)
+            self.logProducer.send('logs', value=log_message)
             return {'status': 'failure', "error": "Node health not available"}
         
     def run_process_on_node(self, node_id, process_config):
@@ -188,7 +188,7 @@ class NodeManager:
                 "service_name": "NodeManager",
                 "msg": "Node not found -" + str(node_id)
             }
-            logProducer.send('logs', value=log_message)
+            self.logProducer.send('logs', value=log_message)
             return {"status": 'failure', "error": "Node not found", "nodeid": node_id}
         
         sucess = self.nodes[node_id].run_process(process_config)
@@ -198,7 +198,7 @@ class NodeManager:
                 "service_name": "NodeManager",
                 "msg": "Process started -" + str(node_id)
             }
-            logProducer.send('logs', value=log_message)
+            self.logProducer.send('logs', value=log_message)
             return {'status': 'success', "msg": "Process started", "nodeid": node_id, "process_config": process_config}
         else:
             log_message = {
@@ -206,7 +206,7 @@ class NodeManager:
                 "service_name": "NodeManager",
                 "msg": "Process failed to start -" + str(node_id)
             }
-            logProducer.send('logs', value=log_message)
+            self.logProducer.send('logs', value=log_message)
             return {'status': 'failure', "error": "Process failed to start", "nodeid": node_id, "process_config": process_config}
     
     

@@ -69,6 +69,7 @@ class Agent:
     def __init__(self, node_id):
         self.node_id = node_id
         self.processes = Processes()
+        self.logProducer = KafkaProducer(bootstrap_servers=BOOTSTRAP_SERVER, value_serializer=lambda v: json.dumps(v).encode('utf-8'))
 
     def start_process(self, process_config):
         name = process_config['name']
@@ -76,19 +77,49 @@ class Agent:
         path = process_config['path']
 
         if not os.path.exists(path):
+            log_message = {
+                "level": 2,
+                "service_name": "Agent" + self.node_id,
+                "msg": f"Path '{path}' does not exist."
+            }
+            self.logProducer.send("logs", json.dumps(log_message).encode('utf-8'))
             return {'method': 'start_process', 'status': 'error', 'message': f"Path '{path}' does not exist."}
 
+        log_message = {
+            "level": 0,
+            "service_name": "Agent" + self.node_id,
+            "msg": f"Starting process '{name}'"
+        }
+        self.logProducer.send("logs", json.dumps(log_message).encode('utf-8'))
         return {'method': 'start_process', 'process_id': self.processes.start_process(name, path,command), 'status': 'success'}
 
     def kill_process(self, process_id):
         self.processes.kill_process(process_id)
+        log_message = {
+            "level": 0,
+            "service_name": "Agent" + self.node_id,
+            "msg": f"Killing process '{process_id}'"
+        }
+        self.logProducer.send("logs", json.dumps(log_message).encode('utf-8'))
         return {'method': 'kill_process', 'process_id': process_id, 'status': 'success'}
 
     def reset_process(self, process_id):
         self.processes.reset_process(process_id)
+        log_message = {
+            "level": 0,
+            "service_name": "Agent" + self.node_id,
+            "msg": f"Resetting process '{process_id}'"
+        }
+        self.logProducer.send("logs", json.dumps(log_message).encode('utf-8'))
         return {'method': 'reset_process', 'process_id': process_id, 'status': 'success'}
 
     def get_processes(self):
+        log_message = {
+            "level": 0,
+            "service_name": "Agent" + self.node_id,
+            "msg": "Getting processes"
+        }
+        self.logProducer.send("logs", json.dumps(log_message).encode('utf-8'))
         return {'method': 'get_processes', 'processes': self.processes.get_processes(), 'status': 'success'}
 
     def get_health(self):
@@ -96,6 +127,13 @@ class Agent:
         free_cores = psutil.cpu_count(logical=True)
         free_memory = psutil.virtual_memory().available
         free_memory_gb = round(free_memory / (1024**3), 2)  # Convert bytes to GB
+        
+        log_message = {
+            "level": 0,
+            "service_name": "Agent" + self.node_id,
+            "msg": "Getting health"
+        }
+        self.logProducer.send("logs", json.dumps(log_message).encode('utf-8'))
 
         # Return both CPU and memory info
         return {
@@ -111,22 +149,29 @@ if __name__ == "__main__":
     node_id = sys.argv[1]
     BOOTSTRAP_SERVER = sys.argv[-1]
     
+    logProducer = KafkaProducer(bootstrap_servers=BOOTSTRAP_SERVER, value_serializer=lambda v: json.dumps(v).encode('utf-8'))
+    log_message = {
+        "level": 0,
+        "service_name": "Agent" + node_id,
+        "msg": "Agent has been started"
+    }
     # create a producer, log that agent has started.
     producer = KafkaProducer(bootstrap_servers=BOOTSTRAP_SERVER)
-    log = { 'Process': 'Agent' + node_id, 'message': 'I have been run' }
-    producer.send("logs", json.dumps(log).encode('utf-8'))
     # producer.flush()
 
     # Start agent server
     agent = Agent(node_id)
     consumer = KafkaConsumer('AgentIn', bootstrap_servers=BOOTSTRAP_SERVER)
-    print("Starting the agent server\n")
    
     for msg in consumer:
         request = json.loads(msg.value)
         if(request['node_id'] == node_id):
-            log = { 'Process': 'Agent ' + node_id, 'message': 'I have received a message', 'text': request}
-            producer.send("logs", json.dumps(log).encode('utf-8'))
+            log_message = {
+                "level": 0,
+                "service_name": "Agent" + node_id,
+                "msg": "Request received"
+            }
+            logProducer.send("logs", json.dumps(log_message).encode('utf-8'))
             
             # Process RPC request
             if(request['method'] == 'start_process'):
@@ -145,5 +190,10 @@ if __name__ == "__main__":
             
             # Send output
             response = {"request": request, "result": result}
-            producer.send("logs", json.dumps(response).encode('utf-8'))
+            log_message = {
+                "level": 0,
+                "service_name": "Agent" + node_id,
+                "msg": "Response sent"
+            }
+            logProducer.send("logs", json.dumps(log_message).encode('utf-8'))
             producer.send('AgentOut', json.dumps(response).encode('utf-8'))
