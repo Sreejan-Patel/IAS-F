@@ -1,0 +1,98 @@
+[2024-04-24 07:39:13.879410] INFO: DeploymentService: Reading StartDeploymentService.json file
+[2024-04-24 07:39:13.879657] INFO: DeploymentService: StartDeploymentService.json file read successfully
+[2024-04-24 07:39:13.879717] INFO: DeploymentService: Hostname: localhost and Port: 8080 read from StartDeploymentService.json file
+[2024-04-24 07:39:13.879750] INFO: DeploymentService: Preparing to start DeploymentService with hostname: localhost and port: 8080
+[2024-04-24 07:39:14.008688] INFO: DeploymentService: Attempting to start DeploymentService
+[2024-04-24 07:39:14.008759] INFO: DeploymentService: Hostname: localhost and Port: 8080 read from StartDeploymentService.json file
+[2024-04-24 07:39:14.132994] INFO: DeploymentService: Attempting to start DeploymentService
+[2024-04-24 07:39:14.133071] INFO: DeploymentService: Hostname: localhost and Port: 8080 read from StartDeploymentService.json file
+[2024-04-24 07:40:19.733233] INFO: DeploymentService: Reading StartDeploymentService.json file
+[2024-04-24 07:40:19.733355] INFO: DeploymentService: StartDeploymentService.json file read successfully
+[2024-04-24 07:40:19.733410] INFO: DeploymentService: Hostname: localhost and Port: 8080 read from StartDeploymentService.json file
+[2024-04-24 07:40:19.733442] INFO: DeploymentService: Preparing to start DeploymentService with hostname: localhost and port: 8080
+[2024-04-24 07:40:19.860671] INFO: DeploymentService: Attempting to start DeploymentService
+[2024-04-24 07:40:19.860774] INFO: DeploymentService: Hostname: localhost and Port: 8080 read from StartDeploymentService.json file
+[2024-04-24 07:40:19.994052] INFO: DeploymentService: Attempting to start DeploymentService
+[2024-04-24 07:40:19.994150] INFO: DeploymentService: Hostname: localhost and Port: 8080 read from StartDeploymentService.json file
+[2024-05-02 14:56:25.974847] INFO: DeploymentService: Attempting to start DeploymentService
+[2024-05-02 14:56:25.975646] INFO: DeploymentService: Hostname: localhost and Port: 8080 read from StartDeploymentService.json file
+[2024-05-02 14:56:38.311496] INFO: DeploymentService: Deployment Service up & running and hostname: localhost and port: 8080
+[2024-05-02 14:57:25.850774] INFO: DeploymentService: User ID: ha attempts to deploy a model
+[2024-05-02 14:57:25.850987] INFO: DeploymentService: User ID: ha uploaded a model. Attempting to save the zip
+[2024-05-02 14:57:25.895783] INFO: DeploymentService: User ID: ha uploaded a model. Model saved successfully
+[2024-05-02 14:57:26.032757] INFO: DeploymentService: Deployment Service up & running and hostname: localhost and port: 8080
+[2024-05-02 15:04:03.381875] INFO: DeploymentService: Attempting to start DeploymentService
+[2024-05-02 15:04:03.383011] INFO: DeploymentService: Hostname: localhost and Port: 8080 read from StartDeploymentService.json file
+[2024-05-02 15:04:28.770148] INFO: DeploymentService: User ID:  attempts to deploy a model
+[2024-05-02 15:04:28.770264] INFO: DeploymentService: User ID:  uploaded a model. Attempting to save the zip
+[2024-05-02 15:04:28.777173] INFO: DeploymentService: User ID:  uploaded a model. Model saved successfully
+[2024-05-02 15:04:28.777654] ERROR: DeploymentService: User ID:  uploaded a model. Error: name 'subprocess' is not defined
+[2024-05-02 15:04:28.813514] INFO: DeploymentService: Deployment Service up & running and hostname: localhost and port: 8080
+[2024-05-02 15:04:46.671836] INFO: DeploymentService: User ID: hi attempts to deploy a model
+[2024-05-02 15:04:46.672103] INFO: DeploymentService: User ID: hi uploaded a model. Attempting to save the zip
+[2024-05-02 15:04:46.688210] INFO: DeploymentService: User ID: hi uploaded a model. Model saved successfully
+[2024-05-02 15:04:46.688473] ERROR: DeploymentService: User ID: hi uploaded a model. Error: name 'subprocess' is not defined
+[2024-05-02 15:04:46.715365] INFO: DeploymentService: Deployment Service up & running and hostname: localhost and port: 8080
+[2024-05-04 10:43:59.628385] INFO: DeploymentService: Attempting to start DeploymentService
+[2024-05-04 10:43:59.628963] INFO: DeploymentService: Hostname: localhost and Port: 8080 read from StartDeploymentService.json file
+[2024-05-04 10:44:07.301376] INFO: DeploymentService: Deployment Service up & running and hostname: localhost and port: 8080
+[2024-05-04 10:44:37.536368] INFO: DeploymentService: User ID: bal attempts to deploy a model
+[2024-05-04 10:44:37.539482] INFO: DeploymentService: User ID: bal uploaded a model. Attempting to save the zip
+[2024-05-04 10:44:37.549823] INFO: DeploymentService: User ID: bal uploaded a model. Model saved successfully
+[2024-05-04 10:44:37.550039] ERROR: DeploymentService: User ID: bal uploaded a model. Error: name 'subprocess' is not defined
+[2024-05-04 10:44:37.562054] INFO: DeploymentService: Deployment Service up & running and hostname: localhost and port: 8080
+[2024-05-04 11:10:23.516282] INFO: DeploymentService: Attempting to start DeploymentService
+[2024-05-04 11:10:23.516396] INFO: DeploymentService: Hostname: localhost and Port: 8080 read from StartDeploymentService.json file
+[2024-05-04 11:10:28.450426] INFO: DeploymentService: Deployment Service up & running and hostname: localhost and port: 8080
+[2024-05-04 11:10:52.926571] INFO: DeploymentService: User ID: bal attempts to deploy a model
+[2024-05-04 11:10:52.929776] INFO: DeploymentService: User ID: bal uploaded a model. Attempting to save the zip
+[2024-05-04 11:10:52.942068] INFO: DeploymentService: User ID: bal uploaded a model. Model saved successfully
+[2024-05-04 11:10:52.942352] ERROR: DeploymentService: User ID: bal uploaded a model. Error: name 'subprocess' is not defined
+[2024-05-04 11:10:52.958155] INFO: DeploymentService: Deployment Service up & running and hostname: localhost and port: 8080
+[2024-05-04 11:13:23.507693] INFO: DeploymentService: Attempting to start DeploymentService
+[2024-05-04 11:13:23.507846] INFO: DeploymentService: Hostname: localhost and Port: 8080 read from StartDeploymentService.json file
+[2024-05-04 11:13:26.697045] INFO: DeploymentService: Deployment Service up & running and hostname: localhost and port: 8080
+[2024-05-04 11:13:46.700464] INFO: DeploymentService: User ID: hi attempts to deploy a model
+[2024-05-04 11:13:46.703654] INFO: DeploymentService: User ID: hi uploaded a model. Attempting to save the zip
+[2024-05-04 11:13:46.706818] INFO: DeploymentService: User ID: hi uploaded a model. Model saved successfully
+[2024-05-04 11:13:46.707022] ERROR: DeploymentService: User ID: hi uploaded a model. Error: name 'subprocess' is not defined
+[2024-05-04 11:13:46.710821] INFO: DeploymentService: Deployment Service up & running and hostname: localhost and port: 8080
+[2024-05-04 11:15:59.480699] INFO: DeploymentService: Attempting to start DeploymentService
+[2024-05-04 11:15:59.480799] INFO: DeploymentService: Hostname: localhost and Port: 8080 read from StartDeploymentService.json file
+[2024-05-04 11:16:07.140348] INFO: DeploymentService: Deployment Service up & running and hostname: localhost and port: 8080
+[2024-05-04 11:16:18.039168] INFO: DeploymentService: User ID: hi attempts to deploy a model
+[2024-05-04 11:16:18.043839] INFO: DeploymentService: User ID: hi uploaded a model. Attempting to save the zip
+[2024-05-04 11:16:18.050265] INFO: DeploymentService: User ID: hi uploaded a model. Model saved successfully
+[2024-05-04 11:16:18.059781] ERROR: DeploymentService: User ID: hi uploaded a model. Error: [Errno 2] No such file or directory: 'touch hello'
+[2024-05-04 11:16:18.070573] INFO: DeploymentService: Deployment Service up & running and hostname: localhost and port: 8080
+[2024-05-04 16:15:43.617857] INFO: DeploymentService: Attempting to start DeploymentService
+[2024-05-04 16:15:51.332106] INFO: DeploymentService: Attempting to start DeploymentService
+[2024-05-04 16:15:51.332319] INFO: DeploymentService: Hostname: localhost and Port: 8080 read from StartDeploymentService.json file
+[2024-05-04 16:17:38.258285] INFO: DeploymentService: Attempting to start DeploymentService
+[2024-05-04 16:17:38.258724] INFO: DeploymentService: Hostname: localhost and Port: 8080 read from StartDeploymentService.json file
+[2024-05-04 16:17:38.279760] INFO: DeploymentService: Attempting to start DeploymentService
+[2024-05-04 16:17:38.279885] INFO: DeploymentService: Hostname: localhost and Port: 8080 read from StartDeploymentService.json file
+[2024-05-04 16:26:56.196114] INFO: DeploymentService: Attempting to start DeploymentService
+[2024-05-04 16:26:56.196873] INFO: DeploymentService: Hostname: localhost and Port: 8080 read from StartDeploymentService.json file
+[2024-05-04 16:27:27.036433] INFO: DeploymentService: Deployment Service up & running and hostname: localhost and port: 8080
+[2024-05-04 16:27:42.148152] INFO: DeploymentService: User ID: cv gfb attempts to deploy a model
+[2024-05-04 16:27:42.155654] INFO: DeploymentService: User ID: cv gfb uploaded a model. Attempting to save the zip
+[2024-05-04 16:27:46.734319] INFO: DeploymentService: User ID: cv gfb uploaded a model. Model saved successfully
+[2024-05-04 16:27:46.736179] ERROR: DeploymentService: User ID: cv gfb uploaded a model. Error: [Errno 2] No such file or directory: 'touch hello'
+[2024-05-04 16:27:46.747725] INFO: DeploymentService: Deployment Service up & running and hostname: localhost and port: 8080
+[2024-05-04 16:48:06.673402] INFO: DeploymentService: Attempting to start DeploymentService
+[2024-05-04 16:48:06.673907] INFO: DeploymentService: Hostname: localhost and Port: 8080 read from StartDeploymentService.json file
+[2024-05-04 16:48:10.981528] INFO: DeploymentService: Deployment Service up & running and hostname: localhost and port: 8080
+[2024-05-04 16:48:36.238792] INFO: DeploymentService: User ID: asdrr attempts to deploy a model
+[2024-05-04 16:48:38.549077] INFO: DeploymentService: User ID: asdrr uploaded a model. Attempting to save the zip
+[2024-05-04 16:48:44.297000] INFO: DeploymentService: User ID: asdrr uploaded a model. Model saved successfully
+[2024-05-04 16:48:44.299370] ERROR: DeploymentService: User ID: asdrr uploaded a model. Error: [Errno 2] No such file or directory: 'touch hello'
+[2024-05-04 16:48:44.311157] INFO: DeploymentService: Deployment Service up & running and hostname: localhost and port: 8080
+[2024-05-04 16:57:46.718378] INFO: DeploymentService: Attempting to start DeploymentService
+[2024-05-04 16:57:46.719041] INFO: DeploymentService: Hostname: localhost and Port: 8080 read from StartDeploymentService.json file
+[2024-05-04 16:59:18.359486] INFO: DeploymentService: Deployment Service up & running and hostname: localhost and port: 8080
+[2024-05-04 16:59:33.947340] INFO: DeploymentService: User ID: balaram attempts to deploy a model
+[2024-05-04 16:59:36.227598] INFO: DeploymentService: User ID: balaram uploaded a model. Attempting to save the zip
+[2024-05-04 16:59:42.003253] INFO: DeploymentService: User ID: balaram uploaded a model. Model saved successfully
+[2024-05-04 16:59:42.005330] ERROR: DeploymentService: User ID: balaram uploaded a model. Error: [Errno 2] No such file or directory: 'touch hello'
+[2024-05-04 16:59:42.017301] INFO: DeploymentService: Deployment Service up & running and hostname: localhost and port: 8080

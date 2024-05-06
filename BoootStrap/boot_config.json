@@ -1,0 +1,42 @@
+{
+    "stage 1": [
+        {
+            "name": "vm_manager",
+            "path": "/home/sreejan/IAS/VmManager",
+            "command": "python3 vm_manager.py"
+        },
+        {
+            "name": "node_manager",
+            "path": "/home/sreejan/IAS/NodeManager",
+            "command": "python3 node_manager.py"
+        },
+        {
+            "name": "web_engine", 
+            "path": "/home/sreejan/IAS/webEngine",
+            "command": "python3 webEngine.py"
+        },
+        {
+            "name": "inference_engine",
+            "path": "/home/sreejan/IAS/inference",
+            "command": "python3 InferenceEngine.py"
+        },
+        {
+            "name": "data_manager",
+            "path": "/home/sreejan/IAS/web_apps/mnist-app/mnist-app",
+            "command": "npm install && npm start"
+        },
+        {
+            "name": "workflow_engine",
+            "path": "/home/sreejan/IAS/web_apps",
+            "command": "python3 app1.py"
+        },
+        {
+            "name": "deployment",
+            "path": "/home/sreejan/IAS/IAS",
+            "command": "python3 SystemFiles/Executables/DeploymentService.py localhost 8080"
+        }
+    ],
+    "stage 2": [
+
+    ]
+}

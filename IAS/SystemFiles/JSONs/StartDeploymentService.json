@@ -1,0 +1,7 @@
+{
+    "StartDeploymentServiceConfigurations":
+    {
+        "hostname": "localhost",
+        "port": 8080
+    }
+}

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flask Data Passing</title>
+</head>
+<body>
+    <h1>Data Received</h1>
+    <div id="rendered_template"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.js" integrity="sha384-0rsgSvG63R0PwmSzBRgI5KjB/fM7QBsFEiHtVj9yqqeWV+ShFYq73nFLsHxojx6p" crossorigin="anonymous"></script>
+    <script>
+        const socket = io();
+
+        socket.on('render_template', function(rendered_template) {
+            document.getElementById('rendered_template').innerHTML = rendered_template;
+        });
+    </script>
+</body>
+</html>

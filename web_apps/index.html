@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MNIST Digit Recognition</title>
+</head>
+<body>
+    <h2>MNIST Digit Recognition</h2>
+    <form id="uploadForm" enctype="multipart/form-data">
+        <input type="file" id="image" name="image">
+        <input type="button" id="submitBtn" value="Upload">
+    </form>
+
+    <div id="result"></div>
+
+    <!-- <script>
+        // Function to make a POST request and render JSON response
+        function displayJSON() {
+            fetch('http://127.0.0.1:6001/display', {
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Render JSON object in the 'result' div
+                document.getElementById('result').innerText = JSON.stringify(data, null, 2);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        // Function to handle form submission
+        function handleSubmit(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            const formData = new FormData();
+            formData.append('image', document.getElementById('image').files[0]);
+
+            fetch('http://127.0.0.1:7000/receive_input', {
+                method: 'POST',
+                body: formData
+            })
+            .then(() => {
+                // Display JSON after form submission
+                displayJSON();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        // Call the function when the page loads
+        window.onload = () => {
+            // Attach submit event listener to the form
+            document.getElementById('uploadForm').addEventListener('submit', handleSubmit);
+
+            // Display JSON when the page loads
+            displayJSON();
+        };
+    </script> -->
+</body>
+</html>

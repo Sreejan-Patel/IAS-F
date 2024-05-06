@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Log Viewer</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.2/socket.io.js"></script>
+</head>
+<body>
+    <table id="log-table">
+        <thead>
+            <tr>
+                <th>Timestamp</th>
+                <th>Service Name</th>
+                <th>Level</th>
+                <th>Message</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <script>
+        var socket = io.connect('http://' + document.domain + ':' + location.port);
+        socket.on('new_log', function(log) {
+            var tableRef = document.getElementById("log-table").getElementsByTagName('tbody')[0];
+            var newRow = tableRef.insertRow();
+            newRow.insertCell().textContent = new Date(log.timestamp * 1000).toLocaleString();
+            newRow.insertCell().textContent = log.service_name;
+            newRow.insertCell().textContent = log.level;
+            newRow.insertCell().textContent = log.msg;
+        });
+    </script>
+</body>
+</html>
