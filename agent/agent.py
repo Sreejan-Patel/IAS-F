@@ -8,7 +8,7 @@ import os
 
 
 
-BOOTSTRAP_SERVER = 'localhost:9092'
+BOOTSTRAP_SERVER = '10.1.36.50:9092'
 
 
 # maintain the list of all processes
@@ -82,7 +82,7 @@ class Agent:
                 "service_name": "Agent" + self.node_id,
                 "msg": f"Path '{path}' does not exist."
             }
-            self.logProducer.send("logs", json.dumps(log_message).encode('utf-8'))
+            self.logProducer.send("logs", value=log_message)
             return {'method': 'start_process', 'status': 'error', 'message': f"Path '{path}' does not exist."}
 
         log_message = {
@@ -90,7 +90,7 @@ class Agent:
             "service_name": "Agent" + self.node_id,
             "msg": f"Starting process '{name}'"
         }
-        self.logProducer.send("logs", json.dumps(log_message).encode('utf-8'))
+        self.logProducer.send("logs", value=log_message)
         return {'method': 'start_process', 'process_id': self.processes.start_process(name, path,command), 'status': 'success'}
 
     def kill_process(self, process_id):
@@ -100,7 +100,7 @@ class Agent:
             "service_name": "Agent" + self.node_id,
             "msg": f"Killing process '{process_id}'"
         }
-        self.logProducer.send("logs", json.dumps(log_message).encode('utf-8'))
+        self.logProducer.send("logs", value=log_message)
         return {'method': 'kill_process', 'process_id': process_id, 'status': 'success'}
 
     def reset_process(self, process_id):
@@ -110,7 +110,7 @@ class Agent:
             "service_name": "Agent" + self.node_id,
             "msg": f"Resetting process '{process_id}'"
         }
-        self.logProducer.send("logs", json.dumps(log_message).encode('utf-8'))
+        self.logProducer.send("logs", value=log_message)
         return {'method': 'reset_process', 'process_id': process_id, 'status': 'success'}
 
     def get_processes(self):
@@ -119,7 +119,7 @@ class Agent:
             "service_name": "Agent" + self.node_id,
             "msg": "Getting processes"
         }
-        self.logProducer.send("logs", json.dumps(log_message).encode('utf-8'))
+        self.logProducer.send("logs", value=log_message)
         return {'method': 'get_processes', 'processes': self.processes.get_processes(), 'status': 'success'}
 
     def get_health(self):
@@ -133,7 +133,7 @@ class Agent:
             "service_name": "Agent" + self.node_id,
             "msg": "Getting health"
         }
-        self.logProducer.send("logs", json.dumps(log_message).encode('utf-8'))
+        self.logProducer.send("logs", value=log_message)
 
         # Return both CPU and memory info
         return {
@@ -171,7 +171,7 @@ if __name__ == "__main__":
                 "service_name": "Agent" + node_id,
                 "msg": "Request received"
             }
-            logProducer.send("logs", json.dumps(log_message).encode('utf-8'))
+            logProducer.send("logs", value=log_message)
             
             # Process RPC request
             if(request['method'] == 'start_process'):
@@ -195,5 +195,5 @@ if __name__ == "__main__":
                 "service_name": "Agent" + node_id,
                 "msg": "Response sent"
             }
-            logProducer.send("logs", json.dumps(log_message).encode('utf-8'))
+            logProducer.send("logs", value=log_message)
             producer.send('AgentOut', json.dumps(response).encode('utf-8'))

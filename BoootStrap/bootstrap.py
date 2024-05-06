@@ -79,10 +79,15 @@ if __name__ == '__main__':
                 "service_name": "Bootstrap",
                 "msg": process_config["name"] + ' Process failed to start'
             }
-        time.sleep(10)
-    # agent_process.kill()
+        time.sleep(5)
 
     ## Stage 2
     # Create a node
     # For each subsystem configuration, run the corresponding process.
     # Configuration = Node : Id, path, command json with three keys.
+    for process_config in json.load(open('boot_config.json'))['stage 2']:
+        new_node = kafka_rpc('NodeManager', {'method': 'create_node'})
+        node_id = new_node['node_id']
+        request = {'method': 'run_process_on_node', 'args': {'node_id': node_id, 'config': process_config}}
+        response = kafka_rpc('NodeManager', request)
+        print(response)
