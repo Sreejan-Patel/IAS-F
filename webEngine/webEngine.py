@@ -30,9 +30,6 @@ import sys
 app = Flask(__name__)
 cors = CORS(app)
 
-import logbook
-logbook.set_datetime_format("local")
-
 BOOTSTRAP_SERVER = "localhost:9092"
 
 '''
@@ -47,23 +44,35 @@ If this doesn't work, use nginx as proxy server to redirect all URLs to webEngin
 # destination_url = 'http://127.0.0.1:6003/display'
 @app.route('/receive_input', methods=['POST'])
 def receive_input():
-    print('start of receive_input()')
+
+    logProducer = KafkaProducer(bootstrap_servers=BOOTSTRAP_SERVER, value_serializer=lambda v: json.dumps(v).encode('utf-8'))
+
+    log_message = {
+        "level": "0",
+        "service_name": "webEngine",
+        "msg": "Received input from webapp"
+    }
+    logProducer.send('logs', value=log_message)
     t_stamp = time.time()
     if len(request.files) == 0:
+        log_message = {
+            "level": "3",
+            "service_name": "webEngine",
+            "msg": "No data received"
+        }
+        logProducer.send('logs', value=log_message)
         return "No data received", 400
 
     # Iterate through each file in the request
-    print('before for', request.files['image'].filename)
-    print(request)
     for file_key, file_obj in request.files.items():
         # Determine the type of the file
-        print('file_key: ', file_key, file_obj.filename, file_obj)
+        # print('file_key: ', file_key, file_obj.filename, file_obj)
         file_type = determine_file_type(file_obj.filename)
-        print('file_type: ', file_type)
+        # print('file_type: ', file_type)
 
         # Process the file based on its type
         if file_type == 'image':
-            print('before process_image')
+            # print('before process_image')
             process_image(file_obj,t_stamp)
         elif file_type == 'audio':
             process_audio(file_obj)
@@ -73,16 +82,30 @@ def receive_input():
             # Unsupported file type
             print(file_type)
             return f"Unsupported file type: {file_type}", 400
+
+
+    log_message = {
+        "level": "0",
+        "service_name": "webEngine",
+        "msg": "Data sent to Kafka - input topic"
+    }
+    logProducer.send('logs', value=log_message)
     predicted = None
     consumer = KafkaConsumer('output', bootstrap_servers=BOOTSTRAP_SERVER,auto_offset_reset='earliest')
-    print("start of kafka_consumer()")
+    # print("start of kafka_consumer()")
     for message in consumer:
         #print("message: ",message)
         try:
             #print("entering try block")
             data = json.loads(message.value.decode('utf-8'))
             if data["tstamp"] == t_stamp:
-                print(data["data"])
+                # print(data["data"])
+                log_message = {
+                    "level": "0",
+                    "service_name": "webEngine",
+                    "msg": "Data received from Kafka - output topic"
+                }
+                logProducer.send('logs', value=log_message)
                 predicted = data["data"]
                 break
         except KeyError:
@@ -159,25 +182,25 @@ def send_output_to_url(data):
 
 
 
-def kafka_consumer():
-    consumer = KafkaConsumer('output', bootstrap_servers=BOOTSTRAP_SERVER)
-    print("start of kafka_consumer()")
-    # while True:
-        # print('here')
-    global globaldata
-    globaldata = None
-    for message in consumer:
-        print("message: ",message)
-        try:
-            print("entering try block")
-            globaldata = json.loads(message.value.decode('utf-8'))
-            print('MESSAGE VALUE: ', message.value.decode('utf-8'))
-            print("before send_output_to_url", globaldata)
-            return globaldata
-        except Exception as e:
-            print("Error processing message:", str(e))
+# def kafka_consumer():
+#     consumer = KafkaConsumer('output', bootstrap_servers=BOOTSTRAP_SERVER)
+#     print("start of kafka_consumer()")
+#     # while True:
+#         # print('here')
+#     global globaldata
+#     globaldata = None
+#     for message in consumer:
+#         print("message: ",message)
+#         try:
+#             print("entering try block")
+#             globaldata = json.loads(message.value.decode('utf-8'))
+#             print('MESSAGE VALUE: ', message.value.decode('utf-8'))
+#             print("before send_output_to_url", globaldata)
+#             return globaldata
+#         except Exception as e:
+#             print("Error processing message:", str(e))
             
-    consumer.close()
+#     consumer.close()
 # Example usage:
 if __name__ == "__main__":
     # logbook
