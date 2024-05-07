@@ -10,9 +10,10 @@ requests = [
         'args': {
             'config': {
                 'name': 'install',
-                'path': '/home/balaramakrishna/Documents/4.2/IAS/PreProject/agent',
-                'command': 'bash install.sh',
-                }
+                'path': '/home/balaramakrishna/Documents/4.2/IAS/Last/IAS-F/NodeManager',
+                'command': '/home/balaramakrishna/anaconda3/envs/ias/bin/python node_manager.py',
+                },
+            'topic': 'NodeManagerIn'
             },
     },
     # {
