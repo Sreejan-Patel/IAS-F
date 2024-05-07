@@ -8,7 +8,7 @@ app = Flask(__name__)
 cors = CORS(app)
 
 kafka_producer = KafkaProducer(bootstrap_servers='localhost:9092', value_serializer=lambda v: json.dumps(v).encode('utf-8'))
-URL = 'http://127.0.0.1:6001/predict'
+URL = 'http://127.0.0.1:6003/predict'
 
 @app.route('/receive_output', methods=['POST'])
 def receive_output():
@@ -20,7 +20,7 @@ def receive_output():
     if data is not None:
         print("before send")
         kafka_producer.send("output", value=data)
-        print("receive_output() before flush")
+        print("receive_output() before flush", data)
         kafka_producer.flush()
         print('after flush')
         return "Data received and sent to Kafka successfully receive_output()", 200
@@ -58,6 +58,6 @@ if __name__ == "__main__":
     print("nibba rohit")
     
     # Must listen to 
-    app.run(port=6000)
+    app.run(port=6005)
     
 
