@@ -13,14 +13,24 @@
     ],
     "stage 2": [
         {
-            "name": "deployment",
-            "path": ".",
-            "command": "bash install.sh"
+            "name": "web_engine", 
+            "path": "/home/sreejan/IAS-F/webEngine",
+            "command": "python3 webEngine.py"
         },
         {
-            "name": "deployment2",
-            "path": ".",
-            "command": "bash install.sh"
+            "name": "inference_engine",
+            "path": "/home/sreejan/IAS-F/inference",
+            "command": "python3 InferenceEngine.py"
+        },
+        {
+            "name": "data_manager",
+            "path": "/home/sreejan/IAS-F/web_apps/mnist-app/mnist-app",
+            "command": "npm install && npm start"
+        },
+        {
+            "name": "workflow_engine",
+            "path": "/home/sreejan/IAS-F/web_apps",
+            "command": "python3 app1.py"
         }
     ]
 }

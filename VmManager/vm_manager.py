@@ -4,6 +4,8 @@ import threading
 import sys
 from kafka import KafkaConsumer, KafkaProducer
 
+# Change Path
+
 SCRIPT_PATH = './bootstrap.sh'
 VM_LIST_PATH = './vm_list.json'
 GET_HEALTH_SCRIPT_PATH = './get_health.py'

@@ -1,6 +1,8 @@
 from kafka import KafkaProducer, KafkaConsumer
 import json, paramiko, time, sys
 
+# Change Path
+
 SCRIPT_PATH = "./test_script.sh"
 BOOTSTRAP_SERVER = 'localhost:9092'
 
@@ -88,12 +90,11 @@ class NodeManager:
     
     def create_node(self):
         Vm_details = kafka_rpc("VmManager", {"method": "allocate_vm"})
-        print(Vm_details, "\n")
         if(Vm_details['status'] == 'success'):
             log_message = {
                 "level": 0,
                 "service_name": "NodeManager",
-                "msg": "VM allocated -" + str(Vm_details['id'])
+                "msg": "VM allocated - " + str(Vm_details['id'])
             }
             self.logProducer.send('logs', value=log_message)
             if(Vm_details['type'] == 'new'):
@@ -102,14 +103,14 @@ class NodeManager:
                 log_message = {
                     "level": 0,
                     "service_name": "NodeManager",
-                    "msg": "Node activated -" + str(node.node_id)
+                    "msg": "Node activated - " + str(node.node_id)
                 }
                 self.logProducer.send('logs', value=log_message)
                 self.nodes[node.node_id] = node
                 log_message = {
                     "level": 0,
                     "service_name": "NodeManager",
-                    "msg": "Node added to nodes -" + str(node.node_id)
+                    "msg": "Node added to nodes - " + str(node.node_id)
                 }
                 return {'status': 'success', "msg": "created a node", "node_id": node.node_id}
             else:
@@ -133,7 +134,7 @@ class NodeManager:
             log_message = {
                 "level": 0,
                 "service_name": "NodeManager",
-                "msg": "Node removed -" + str(node_id)
+                "msg": "Node removed - " + str(node_id)
             }
             self.logProducer.send('logs', value=log_message)
             return {'status': 'success', "msg": "Node removed"}
@@ -153,7 +154,7 @@ class NodeManager:
             log_message = {
                 "level": 0,
                 "service_name": "NodeManager",
-                "msg": "Node reset -" + str(node_id)
+                "msg": "Node reset - " + str(node_id)
             }
             self.logProducer.send('logs', value=log_message)
             return {'status': 'success', "msg": "Node reset"}
@@ -173,7 +174,7 @@ class NodeManager:
             log_message = {
                 "level": 0,
                 "service_name": "NodeManager",
-                "msg": "Node health -" + str(node_id)
+                "msg": "Node health - " + str(node_id)
             }
             self.logProducer.send('logs', value=log_message)
             return {'status': 'success', "msg": "Node health", "health": response['health']}
@@ -192,7 +193,7 @@ class NodeManager:
             log_message = {
                 "level": 3,
                 "service_name": "NodeManager",
-                "msg": "Node not found -" + str(node_id)
+                "msg": "Node not found - " + str(node_id)
             }
             self.logProducer.send('logs', value=log_message)
             return {"status": 'failure', "error": "Node not found", "nodeid": node_id}
@@ -202,7 +203,7 @@ class NodeManager:
             log_message = {
                 "level": 0,
                 "service_name": "NodeManager",
-                "msg": "Process started -" + str(node_id)
+                "msg": "Process started - " + str(node_id)
             }
             self.logProducer.send('logs', value=log_message)
             return {'status': 'success', "msg": "Process started", "nodeid": node_id, "process_config": process_config}
@@ -240,7 +241,7 @@ if __name__ == "__main__":
         log_message = {
             "level": 0,
             "service_name": "NodeManager",
-            "msg": "Received request -" + request['method']
+            "msg": "Received request - " + request['method']
         }
         logProducer.send('logs', value=log_message)
         
@@ -265,7 +266,7 @@ if __name__ == "__main__":
         log_message = {
             "level": 1,
             "service_name": "NodeManager",
-            "msg": "Sending response -" + request['method']
+            "msg": "Sending response - " + request['method']
         }
         logProducer.send('logs', value=log_message)
         producer.send("NodeManagerOut", json.dumps(response).encode('utf-8'))

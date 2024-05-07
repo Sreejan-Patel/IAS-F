@@ -2,9 +2,13 @@ import time
 from pymongo import MongoClient
 from kafka import KafkaConsumer
 import json
+import sys
 
 # MongoDB Atlas URL
 MONGO_KEY = "mongodb+srv://se33:se33@se3.mrwhfdo.mongodb.net/LoggerDB?retryWrites=true&w=majority&appName=Se3"
+
+KAFKA_SERVER = "localhost:9092"
+TOPIC = "logs"
 
 def connect_to_mongodb():
     connected = False
@@ -22,10 +26,6 @@ def connect_to_mongodb():
 
 def consume_and_log():
     client, collection = connect_to_mongodb()
-
-    # Kafka configuration
-    KAFKA_SERVER = "localhost:9092"
-    TOPIC = "logs"
 
     # Create a Kafka consumer
     consumer = KafkaConsumer(TOPIC,
@@ -56,4 +56,5 @@ def log(client, collection, service_name, level, msg):
 
 # Sample Driver Code
 if __name__ == "__main__":
+    KAFKA_SERVER = sys.argv[-1]
     consume_and_log()

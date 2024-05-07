@@ -8,7 +8,7 @@ import os
 
 
 
-BOOTSTRAP_SERVER = '10.1.36.50:9092'
+BOOTSTRAP_SERVER = 'localhost:9092'
 
 
 # maintain the list of all processes
@@ -152,7 +152,7 @@ if __name__ == "__main__":
     logProducer = KafkaProducer(bootstrap_servers=BOOTSTRAP_SERVER, value_serializer=lambda v: json.dumps(v).encode('utf-8'))
     log_message = {
         "level": 0,
-        "service_name": "Agent" + node_id,
+        "service_name": "Agent" + str(node_id),
         "msg": "Agent has been started"
     }
     logProducer.send("logs", value=log_message)
@@ -169,7 +169,7 @@ if __name__ == "__main__":
         if(request['node_id'] == node_id):
             log_message = {
                 "level": 0,
-                "service_name": "Agent" + node_id,
+                "service_name": "Agent" + str(node_id,)
                 "msg": "Request received"
             }
             logProducer.send("logs", value=log_message)
@@ -193,8 +193,8 @@ if __name__ == "__main__":
             response = {"request": request, "result": result}
             log_message = {
                 "level": 0,
-                "service_name": "Agent" + node_id,
-                "msg": "Response sent"
+                "service_name": "Agent" + str(node_id),
+                "msg": "Response sent - Agent" + str(node_id)
             }
             logProducer.send("logs", value=log_message)
             producer.send('AgentOut', json.dumps(response).encode('utf-8'))
