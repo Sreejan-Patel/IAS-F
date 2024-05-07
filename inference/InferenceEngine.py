@@ -3,11 +3,14 @@ import json
 import requests
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+import sys
 
 app = Flask(__name__)
 cors = CORS(app)
 
-kafka_producer = KafkaProducer(bootstrap_servers='localhost:9092', value_serializer=lambda v: json.dumps(v).encode('utf-8'))
+BOOTSTRAP_SERVER = "localhost:9092"
+
+kafka_producer = KafkaProducer(bootstrap_servers=BOOTSTRAP_SERVER, value_serializer=lambda v: json.dumps(v).encode('utf-8'))
 URL = 'http://127.0.0.1:6003/predict'
 
 @app.route('/receive_output', methods=['POST'])
@@ -39,7 +42,7 @@ def send_input_to_url(url, data):
         print("Exception occurred while sending data to URL:", str(e))
 def kafka_consumer():
     print("start of kafka_consumer()")
-    consumer = KafkaConsumer('input', bootstrap_servers='localhost:9092')
+    consumer = KafkaConsumer('input', bootstrap_servers=BOOTSTRAP_SERVER)
     for message in consumer:
         print("message: ",message)
         try:
@@ -52,6 +55,7 @@ def kafka_consumer():
 
 if __name__ == "__main__":
     print("Starting Kafka consumer thread")
+    BOOTSTRAP_SERVER = sys.argv[-1]
     import threading
     consumer_thread = threading.Thread(target=kafka_consumer)
     consumer_thread.start()

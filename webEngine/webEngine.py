@@ -32,9 +32,7 @@ cors = CORS(app)
 import logbook
 logbook.set_datetime_format("local")
 
-# import sys
-# sys.path.append('..')
-# from logs.logger import setup_logger
+BOOTSTRAP_SERVER = "localhost:9092"
 
 '''
 The endpoint url is addded to the HTTP json request (field is destination). 
@@ -46,7 +44,7 @@ If this doesn't work, use nginx as proxy server to redirect all URLs to webEngin
 '''
 
 # destination_url = 'http://127.0.0.1:6003/display'
-kafka_producer = KafkaProducer(bootstrap_servers='localhost:9092')
+kafka_producer = KafkaProducer(bootstrap_servers=BOOTSTRAP_SERVER)
 @app.route('/receive_input', methods=['POST'])
 def receive_input():
     print('start of receive_input()')
@@ -76,7 +74,7 @@ def receive_input():
             print(file_type)
             return f"Unsupported file type: {file_type}", 400
     predicted = None
-    consumer = KafkaConsumer('output', bootstrap_servers='localhost:9092',auto_offset_reset='earliest')
+    consumer = KafkaConsumer('output', bootstrap_servers=BOOTSTRAP_SERVER,auto_offset_reset='earliest')
     print("start of kafka_consumer()")
     for message in consumer:
         #print("message: ",message)
@@ -162,7 +160,7 @@ def send_output_to_url(data):
 
 
 def kafka_consumer():
-    consumer = KafkaConsumer('output', bootstrap_servers='localhost:9092',)
+    consumer = KafkaConsumer('output', bootstrap_servers=BOOTSTRAP_SERVER,)
     print("start of kafka_consumer()")
     # while True:
         # print('here')
@@ -188,7 +186,7 @@ if __name__ == "__main__":
     # logger.info("WebEngine started 2")
     # logger.info("WebEngine started 3")
 
-  
+    BOOTSTRAP_SERVER = sys.argv[-1]
     app.run(port=7002)
     
 
