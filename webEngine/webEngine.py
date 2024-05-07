@@ -187,7 +187,7 @@ if __name__ == "__main__":
     # logger.info("WebEngine started 3")
 
     BOOTSTRAP_SERVER = sys.argv[-1]
-    app.run(port=7002)
+    app.run(port=7000)
     
 
 
