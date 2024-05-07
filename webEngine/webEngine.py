@@ -45,7 +45,6 @@ If this doesn't work, use nginx as proxy server to redirect all URLs to webEngin
 '''
 
 # destination_url = 'http://127.0.0.1:6003/display'
-kafka_producer = KafkaProducer(bootstrap_servers=BOOTSTRAP_SERVER)
 @app.route('/receive_input', methods=['POST'])
 def receive_input():
     print('start of receive_input()')
@@ -118,7 +117,7 @@ def process_image(image_file,t_stamp):
     print('before kafka sending')
     # Send the base64 encoded image data to Kafka
     request = {"data": base64_image,"tstamp":t_stamp}
-
+    kafka_producer = KafkaProducer(bootstrap_servers=BOOTSTRAP_SERVER)
     kafka_producer.send("input", value=json.dumps(request).encode('utf-8'))
     print('before flush')
     kafka_producer.flush()
@@ -129,7 +128,7 @@ def process_audio(audio_file):
     # Read the audio data and encode it as base64
     audio_data = audio_file.read()
     base64_audio = base64.b64encode(audio_data).decode('utf-8')
-
+    kafka_producer = KafkaProducer(bootstrap_servers=BOOTSTRAP_SERVER)
     # Send the base64 encoded audio data to Kafka
     kafka_producer.send("input", value=base64_audio.encode('utf-8'))
     kafka_producer.flush()
@@ -139,7 +138,7 @@ def process_audio(audio_file):
 def process_text(text_file):
     # Read the text data
     text_data = text_file.read().decode('utf-8')
-
+    kafka_producer = KafkaProducer(bootstrap_servers=BOOTSTRAP_SERVER)
     # Send the text data to Kafka
     kafka_producer.send("input", value=text_data.encode('utf-8'))
     kafka_producer.flush()
@@ -161,7 +160,7 @@ def send_output_to_url(data):
 
 
 def kafka_consumer():
-    consumer = KafkaConsumer('output', bootstrap_servers=BOOTSTRAP_SERVER,)
+    consumer = KafkaConsumer('output', bootstrap_servers=BOOTSTRAP_SERVER)
     print("start of kafka_consumer()")
     # while True:
         # print('here')

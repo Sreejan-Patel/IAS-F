@@ -9,14 +9,12 @@ app = Flask(__name__)
 cors = CORS(app)
 
 BOOTSTRAP_SERVER = "localhost:9092"
-
-kafka_producer = KafkaProducer(bootstrap_servers=BOOTSTRAP_SERVER, value_serializer=lambda v: json.dumps(v).encode('utf-8'))
 URL = 'http://127.0.0.1:6003/predict'
 
 @app.route('/receive_output', methods=['POST'])
 def receive_output():
     print('start of receive_output()')
-    
+    kafka_producer = KafkaProducer(bootstrap_servers=BOOTSTRAP_SERVER, value_serializer=lambda v: json.dumps(v).encode('utf-8'))
     data = request.json
     print("Received data:", data, type(data))    
     # Check if data is received
