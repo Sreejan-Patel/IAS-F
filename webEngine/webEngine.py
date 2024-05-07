@@ -22,6 +22,7 @@ import base64
 from flask_cors import CORS
 
 import threading
+import time
 
 # def img_to_json(img):
     
@@ -44,12 +45,12 @@ url: webEngine
 If this doesn't work, use nginx as proxy server to redirect all URLs to webEngine
 '''
 
-# destination_url = 'http://127.0.0.1:6001/display'
+# destination_url = 'http://127.0.0.1:6003/display'
 kafka_producer = KafkaProducer(bootstrap_servers='localhost:9092')
 @app.route('/receive_input', methods=['POST'])
 def receive_input():
     print('start of receive_input()')
-   
+    t_stamp = time.time()
     if len(request.files) == 0:
         return "No data received", 400
 
@@ -65,7 +66,7 @@ def receive_input():
         # Process the file based on its type
         if file_type == 'image':
             print('before process_image')
-            process_image(file_obj)
+            process_image(file_obj,t_stamp)
         elif file_type == 'audio':
             process_audio(file_obj)
         elif file_type == 'text':
@@ -74,16 +75,28 @@ def receive_input():
             # Unsupported file type
             print(file_type)
             return f"Unsupported file type: {file_type}", 400
+    predicted = None
+    consumer = KafkaConsumer('output', bootstrap_servers='localhost:9092',auto_offset_reset='earliest')
+    print("start of kafka_consumer()")
+    for message in consumer:
+        #print("message: ",message)
+        try:
+            #print("entering try block")
+            data = json.loads(message.value.decode('utf-8'))
+            if data["tstamp"] == t_stamp:
+                print(data["data"])
+                predicted = data["data"]
+                break
+        except KeyError:
+            pass
+        except Exception as e:
+            print("Error processing message:", str(e))
         
-        print('before thread')
-        consumer_thread.join()
-        print('after join', globaldata)
-
-        return globaldata, 200
-
-    print('end of receive_input()')
-
-    return "Data received and sent to Kafka successfully", 200
+        
+    consumer.close()   
+    
+    
+    return predicted, 200
 
 def determine_file_type(filename):
     print('start of determine_file_type()', filename)
@@ -97,7 +110,7 @@ def determine_file_type(filename):
     else:
         return 'unknown'
 
-def process_image(image_file):
+def process_image(image_file,t_stamp):
     print('start of process_image()')
     # Read the image data and encode it as base64
     image_data = image_file.read()
@@ -105,7 +118,9 @@ def process_image(image_file):
 
     print('before kafka sending')
     # Send the base64 encoded image data to Kafka
-    kafka_producer.send("input", value=base64_image.encode('utf-8'))
+    request = {"data": base64_image,"tstamp":t_stamp}
+
+    kafka_producer.send("input", value=json.dumps(request).encode('utf-8'))
     print('before flush')
     kafka_producer.flush()
 
@@ -142,25 +157,29 @@ def send_output_to_url(data):
         print("Error sending data to URL")
         return
     
-        
+
+
+
+
 def kafka_consumer():
-    consumer = KafkaConsumer('output', bootstrap_servers='localhost:9092')
+    consumer = KafkaConsumer('output', bootstrap_servers='localhost:9092',)
     print("start of kafka_consumer()")
     # while True:
         # print('here')
+    global globaldata
+    globaldata = None
     for message in consumer:
         print("message: ",message)
         try:
-            global globaldata
             print("entering try block")
             globaldata = json.loads(message.value.decode('utf-8'))
+            print('MESSAGE VALUE: ', message.value.decode('utf-8'))
             print("before send_output_to_url", globaldata)
-            # send_output_to_url(data)
-            # print("end")
             return globaldata
         except Exception as e:
             print("Error processing message:", str(e))
-
+            
+    consumer.close()
 # Example usage:
 if __name__ == "__main__":
     # logbook
@@ -169,7 +188,9 @@ if __name__ == "__main__":
     # logger.info("WebEngine started 2")
     # logger.info("WebEngine started 3")
 
-    consumer_thread = threading.Thread(target=kafka_consumer)
-    consumer_thread.start()
-    app.run(port=7000)
+  
+    app.run(port=7002)
     
+
+
+

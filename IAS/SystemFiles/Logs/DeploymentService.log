@@ -96,3 +96,15 @@
 [2024-05-04 16:59:42.003253] INFO: DeploymentService: User ID: balaram uploaded a model. Model saved successfully
 [2024-05-04 16:59:42.005330] ERROR: DeploymentService: User ID: balaram uploaded a model. Error: [Errno 2] No such file or directory: 'touch hello'
 [2024-05-04 16:59:42.017301] INFO: DeploymentService: Deployment Service up & running and hostname: localhost and port: 8080
+[2024-05-06 04:51:17.102030] INFO: DeploymentService: Attempting to start DeploymentService
+[2024-05-06 04:51:17.103403] INFO: DeploymentService: Hostname: localhost and Port: 8080 read from StartDeploymentService.json file
+[2024-05-06 05:00:13.384345] INFO: DeploymentService: Attempting to start DeploymentService
+[2024-05-06 05:00:13.385081] INFO: DeploymentService: Hostname: localhost and Port: 8080 read from StartDeploymentService.json file
+[2024-05-06 05:00:13.411285] INFO: DeploymentService: Attempting to start DeploymentService
+[2024-05-06 05:00:13.411395] INFO: DeploymentService: Hostname: localhost and Port: 8080 read from StartDeploymentService.json file
+[2024-05-06 05:13:40.988206] INFO: DeploymentService: Attempting to start DeploymentService
+[2024-05-06 05:13:40.988809] INFO: DeploymentService: Hostname: localhost and Port: 8080 read from StartDeploymentService.json file
+[2024-05-06 06:01:41.790099] INFO: DeploymentService: Attempting to start DeploymentService
+[2024-05-06 06:01:41.791176] INFO: DeploymentService: Hostname: localhost and Port: 8080 read from StartDeploymentService.json file
+[2024-05-06 06:08:35.853400] INFO: DeploymentService: Attempting to start DeploymentService
+[2024-05-06 06:08:35.854139] INFO: DeploymentService: Hostname: localhost and Port: 8080 read from StartDeploymentService.json file

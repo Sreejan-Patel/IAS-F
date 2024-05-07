@@ -79,7 +79,9 @@ if __name__ == '__main__':
                 "service_name": "Bootstrap",
                 "msg": process_config["name"] + ' Process failed to start'
             }
+            logProducer.send('logs', value=log_message)
         time.sleep(5)
+
 
     ## Stage 2
     # Create a node

@@ -155,6 +155,7 @@ if __name__ == "__main__":
         "service_name": "Agent" + node_id,
         "msg": "Agent has been started"
     }
+    logProducer.send("logs", value=log_message)
     # create a producer, log that agent has started.
     producer = KafkaProducer(bootstrap_servers=BOOTSTRAP_SERVER)
     # producer.flush()
