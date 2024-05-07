@@ -122,7 +122,7 @@ if __name__ == '__main__':
         
         model.fit(
             ds_train,
-            epochs=15,
+            epochs=30,
             validation_data=ds_test,
         )
 
