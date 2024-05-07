@@ -254,6 +254,15 @@ if __name__ == '__main__':
             result = vm_manager.get_vms()
         elif(request['method'] == 'get_health'):
             result = vm_manager.get_health(request['args']['vm_id'])
+        elif(request['method']  == 'ping'):
+            topic = 'PingIn'
+            result = {}
+            result['timestamp'] = time.time()
+            result['process_id'] = request['process_id'] # get node id from somewhere
+            result['method'] = 'pingback'
+            producer = KafkaProducer(bootstrap_servers=BOOTSTRAP_SERVER)
+            producer.send(topic, json.dumps(result).encode('utf-8'))
+            producer.flush()
         else:
             result = {'error': 'Invalid method'}
             print("Invalid method ", request['method'])

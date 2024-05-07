@@ -177,6 +177,21 @@ if __name__ == "__main__":
             # Process RPC request
             if(request['method'] == 'start_process'):
                 result = agent.start_process(request['args']['config'])
+                if(result['status'] == 'success' and 'topic' in request['args']):
+                    topic = 'PingIn'
+                    request1 = {}
+                    request1['node_id'] =  node_id 
+                    request1['process_id'] = result['process_id']
+                    request1['service_address'] = 'localhost'
+                    request1['process_address'] = 'localhost'
+                    request1['status'] = 'LIVE'
+                    request1['method'] = 'register'
+                    request1['config'] = request['args']['config']
+                    request1['topic'] = request['args']['topic'] # todo : get topic
+                    producer = KafkaProducer(bootstrap_servers=BOOTSTRAP_SERVER)
+                    producer.send(topic, json.dumps(request1).encode('utf-8'))
+                    producer.flush()
+                # send to registry process_id and node_id and store
             elif(request['method'] == 'kill_process'):
                 result = agent.kill_process(request['args']['process_id'])
             elif(request['method'] == 'reset_process'):
@@ -185,6 +200,14 @@ if __name__ == "__main__":
                 result = agent.get_processes()
             elif(request['method'] == 'get_health'):
                 result = agent.get_health()
+            elif(request['method'] == 'restart_service'):
+                print('restarting node')
+                result = agent.start_process(request['config']) #todo : restart process -> process_id shouldn't change
+                topic = 'PingIn'
+                result['method'] = 'restart_service_back'
+                producer = KafkaProducer(bootstrap_servers=BOOTSTRAP_SERVER)
+                producer.send(topic, json.dumps(result).encode('utf-8'))
+                producer.flush()
             else:
                 result = {'error': 'Invalid method'}
                 print("Invalid method ", request['method'])

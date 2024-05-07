@@ -258,6 +258,15 @@ if __name__ == "__main__":
             result = node_manager.get_health(request['args']['node_id'])
         elif(request['method'] == 'run_process_on_node'):
             result = node_manager.run_process_on_node(request['args']['node_id'], request['args']['config'])
+        elif(request['method']  == 'ping'):
+            topic = 'PingIn'
+            result = {}
+            result['timestamp'] = time.time()
+            result['process_id'] = request['process_id'] # get node id from somewhere
+            result['method'] = 'pingback'
+            producer = KafkaProducer(bootstrap_servers=BOOTSTRAP_SERVER)
+            producer.send(topic, json.dumps(result).encode('utf-8'))
+            producer.flush()
         else:
             result = {"error": "method not found"}
         
