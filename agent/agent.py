@@ -8,7 +8,7 @@ import os
 
 
 
-BOOTSTRAP_SERVER = 'localhost:9092'
+BOOTSTRAP_SERVER = '10.1.36.50:9092'
 
 
 # maintain the list of all processes

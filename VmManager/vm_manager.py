@@ -98,7 +98,7 @@ class VMManager:
                         "msg": f"VM allocated: {vm.ip}"
                     }
                     self.logProducer.send('logs', value=log_message)
-                    return {"msg": "VM allocated", "id": vm.id, "ip": vm.ip, "username": vm.username, "password": vm.password, "status": "success"}
+                    return {"msg": "VM allocated", "id": vm.id, "ip": vm.ip, "username": vm.username, "password": vm.password, "status": "success", "type": "new"}
             
             # Assess health of all active VMs
             log_message = {
@@ -117,7 +117,7 @@ class VMManager:
                     "msg": f"Best VM selected: {best_vm.ip}"
                 }
                 self.logProducer.send('logs', value=log_message)
-                return {"msg": "VM allocated", "id": best_vm.id, "ip": best_vm.ip, "username": best_vm.username, "password": best_vm.password}
+                return {"msg": "VM allocated", "id": best_vm.id, "ip": best_vm.ip, "username": best_vm.username, "password": best_vm.password, "type": "old", "status": "success"}
 
             log_message = {
                 "level": 2,
@@ -125,7 +125,7 @@ class VMManager:
                 "msg": "No inactive VM available"
             }
             self.logProducer.send('logs', value=log_message)
-            return {"msg": "No inactive VM available"}
+            return {"msg": "No inactive VM available", "status": "failure"}
     
     def get_vms(self):
         with self.lock:
@@ -229,6 +229,7 @@ if __name__ == '__main__':
     # Start vm_manager server
     vm_manager = VMManager(VM_LIST_PATH)
     consumer = KafkaConsumer('VmManagerIn', bootstrap_servers='localhost:9092')
+    print("started vm manager")
     
     for msg in consumer:
         # Parse the request

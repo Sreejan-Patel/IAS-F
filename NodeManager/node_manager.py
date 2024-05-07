@@ -88,6 +88,7 @@ class NodeManager:
     
     def create_node(self):
         Vm_details = kafka_rpc("VmManager", {"method": "allocate_vm"})
+        print(Vm_details, "\n")
         if(Vm_details['status'] == 'success'):
             log_message = {
                 "level": 0,
@@ -95,21 +96,26 @@ class NodeManager:
                 "msg": "VM allocated -" + str(Vm_details['id'])
             }
             self.logProducer.send('logs', value=log_message)
-            node = Node(len(self.nodes) + 1, Vm_details['ip'], Vm_details['username'], Vm_details['password'], Vm_details['id'])
-            node.activate_node()
-            log_message = {
-                "level": 0,
-                "service_name": "NodeManager",
-                "msg": "Node activated -" + str(node.node_id)
-            }
-            self.logProducer.send('logs', value=log_message)
-            self.nodes[node.node_id] = node
-            log_message = {
-                "level": 0,
-                "service_name": "NodeManager",
-                "msg": "Node added to nodes -" + str(node.node_id)
-            }
-            return {'status': 'success', "msg": "created a node", "node_id": node.node_id}
+            if(Vm_details['type'] == 'new'):
+                node = Node(len(self.nodes) + 1, Vm_details['ip'], Vm_details['username'], Vm_details['password'], Vm_details['id'])
+                node.activate_node()
+                log_message = {
+                    "level": 0,
+                    "service_name": "NodeManager",
+                    "msg": "Node activated -" + str(node.node_id)
+                }
+                self.logProducer.send('logs', value=log_message)
+                self.nodes[node.node_id] = node
+                log_message = {
+                    "level": 0,
+                    "service_name": "NodeManager",
+                    "msg": "Node added to nodes -" + str(node.node_id)
+                }
+                return {'status': 'success', "msg": "created a node", "node_id": node.node_id}
+            else:
+                for node in self.nodes.values():
+                    if(node.vm_id == Vm_details['id']): 
+                        return  {'status': 'success', "msg": "created a node", "node_id": node.node_id}
         else:
             log_message = {
                 "level": 3,
