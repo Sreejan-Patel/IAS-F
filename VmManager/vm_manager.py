@@ -226,11 +226,11 @@ if __name__ == '__main__':
     
     logProducer.send('logs', value=log_message)
     # create a producer, log that vm_manager has started.
-    producer = KafkaProducer(bootstrap_servers='localhost:9092')
+    producer = KafkaProducer(bootstrap_servers=BOOTSTRAP_SERVER)
 
     # Start vm_manager server
     vm_manager = VMManager(VM_LIST_PATH)
-    consumer = KafkaConsumer('VmManagerIn', bootstrap_servers='localhost:9092')
+    consumer = KafkaConsumer('VmManagerIn', bootstrap_servers=BOOTSTRAP_SERVER)
     print("started vm manager")
     
     for msg in consumer:

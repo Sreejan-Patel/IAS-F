@@ -48,7 +48,7 @@ def receive_input():
     logProducer = KafkaProducer(bootstrap_servers=BOOTSTRAP_SERVER, value_serializer=lambda v: json.dumps(v).encode('utf-8'))
 
     log_message = {
-        "level": "0",
+        "level": 0,
         "service_name": "webEngine",
         "msg": "Received input from webapp"
     }
@@ -56,7 +56,7 @@ def receive_input():
     t_stamp = time.time()
     if len(request.files) == 0:
         log_message = {
-            "level": "3",
+            "level": 3,
             "service_name": "webEngine",
             "msg": "No data received"
         }
@@ -69,7 +69,12 @@ def receive_input():
         # print('file_key: ', file_key, file_obj.filename, file_obj)
         file_type = determine_file_type(file_obj.filename)
         # print('file_type: ', file_type)
-
+        log_message = {
+            "level": 0,
+            "service_name": "webEngine",
+            "msg": "Data sent to Kafka - input topic"
+        }
+        logProducer.send('logs', value=log_message)
         # Process the file based on its type
         if file_type == 'image':
             # print('before process_image')
@@ -83,13 +88,6 @@ def receive_input():
             print(file_type)
             return f"Unsupported file type: {file_type}", 400
 
-
-    log_message = {
-        "level": "0",
-        "service_name": "webEngine",
-        "msg": "Data sent to Kafka - input topic"
-    }
-    logProducer.send('logs', value=log_message)
     predicted = None
     consumer = KafkaConsumer('output', bootstrap_servers=BOOTSTRAP_SERVER,auto_offset_reset='earliest')
     # print("start of kafka_consumer()")
@@ -101,7 +99,7 @@ def receive_input():
             if data["tstamp"] == t_stamp:
                 # print(data["data"])
                 log_message = {
-                    "level": "0",
+                    "level": 0,
                     "service_name": "webEngine",
                     "msg": "Data received from Kafka - output topic"
                 }
@@ -203,13 +201,15 @@ def send_output_to_url(data):
 #     consumer.close()
 # Example usage:
 if __name__ == "__main__":
-    # logbook
-    # logger = setup_logger("../central_log.log")
-    # print("WebEngine started")
-    # logger.info("WebEngine started 2")
-    # logger.info("WebEngine started 3")
-
     BOOTSTRAP_SERVER = sys.argv[-1]
+    logProducer = KafkaProducer(bootstrap_servers=BOOTSTRAP_SERVER, value_serializer=lambda v: json.dumps(v).encode('utf-8'))
+    log_message = {
+        "level": 0,
+        "service_name": "webEngine",
+        "msg": "Starting webEngine service"
+    }
+    logProducer.send('logs', value=log_message)
+
     app.run(port=7000)
     
 

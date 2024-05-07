@@ -18,7 +18,7 @@ def receive_output():
     logProducer = KafkaProducer(bootstrap_servers=BOOTSTRAP_SERVER, value_serializer=lambda v: json.dumps(v).encode('utf-8'))
 
     log_message = {
-        "level": "0",
+        "level": 0,
         "service_name": "inferenceEngine",
         "msg": "Received output from inference service"
     }
@@ -33,7 +33,7 @@ def receive_output():
         print("receive_output() before flush", data)
         kafka_producer.flush()
         log_message = {
-            "level": "0",
+            "level": 0,
             "service_name": "inferenceEngine",
             "msg": "Data sent to Kafka successfully - output topic"
         }
@@ -42,7 +42,7 @@ def receive_output():
         return "Data received and sent to Kafka successfully receive_output()", 200
     else:
         log_message = {
-            "level": "3",
+            "level": 3,
             "service_name": "inferenceEngine",
             "msg": "No data received"
         }
@@ -70,9 +70,9 @@ def kafka_consumer():
             data = message.value     
             # print('before send_input_to_url') 
             log_message = {
-                "level": "0",
+                "level": 0,
                 "service_name": "inferenceEngine",
-                "msg": "Received input from input topic"
+                "msg": "Data Recieved from Kafka - input topic"
             }
             logProducer.send('logs', value=log_message)
             send_input_to_url(url, data)
@@ -82,6 +82,13 @@ def kafka_consumer():
 if __name__ == "__main__":
     # print("Starting Kafka consumer thread")
     BOOTSTRAP_SERVER = sys.argv[-1]
+    logProducer = KafkaProducer(bootstrap_servers=BOOTSTRAP_SERVER, value_serializer=lambda v: json.dumps(v).encode('utf-8'))
+    log_message = {
+        "level": 0,
+        "service_name": "inferenceEngine",
+        "msg": "Inference Engine service started"
+    }
+    logProducer.send('logs', value=log_message)
     import threading
     consumer_thread = threading.Thread(target=kafka_consumer)
     consumer_thread.start()
